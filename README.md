@@ -1,6 +1,6 @@
 # WoW Addon Updater
 
-A simple, lightweight tool for managing and updating addons from CurseForge for World of Warcraft.
+A simple, lightweight tool for managing and updating addons from CurseForge for all versions of World of Warcraft (Retail/Classic/TBC/WOTLK/Cata/MoP).
 
 ![WoW Addon Updater](screenshot.png)
 
