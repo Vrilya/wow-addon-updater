@@ -28,7 +28,7 @@ A simple, lightweight tool for managing and updating addons from CurseForge for 
 
 ## Getting Started
 
-1. **First Launch**: On first launch, you'll need to set your WoW addons directory in the Settings
+1. **First Launch**: On first launch, you'll need to set your game version and WoW addons directory in the Settings
 2. **Select Game Version**: Use the dropdown menu at the top to select the correct game version
 3. **Set Addon Path**: Click the ⚙️ (Settings) button and browse to your WoW addons folder
    - For example `C:\Program Files (x86)\World of Warcraft\_classic_\Interface\AddOns`
