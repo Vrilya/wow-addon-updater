@@ -13,6 +13,8 @@ A simple, lightweight tool for managing and updating addons from CurseForge for 
 - ⚙️ **ElvUI Support**: Install, update, and manage ElvUI alongside your CurseForge addons
 - 🗑️ **Easy Removal**: Easily remove addons you no longer use
 - 💾 **Smart Version Tracking**: Keeps track of installed versions and notifies when updates are available
+- 🛡️ **No Ads or Tracking**: Completely ad-free with no telemetry or user data collection
+- 🔒 **Privacy First**: All data stays on your computer - nothing is sent to external servers
 
 ## Requirements
 
