@@ -30,12 +30,11 @@ A simple, lightweight tool for managing and updating addons from CurseForge for 
 
 ## Getting Started
 
-1. **First Launch**: On first launch, you'll need to set your game version and WoW addons directory in the Settings
-2. **Select Game Version**: Use the dropdown menu at the top to select the correct game version
-3. **Set Addon Path**: Click the ⚙️ (Settings) button and browse to your WoW addons folder
-   - For example `C:\Program Files (x86)\World of Warcraft\_classic_\Interface\AddOns`
-4. **Important Note**: The application only manages addons that it installs. For best results, I recommend removing previously installed addons and reinstalling them through this tool
-5. **Scan for Updates**: Click the "Scan for Updates" button to check for available updates
+1. **Select Game Version**: Open Settings and choose your WoW version from the dropdown (Classic Vanilla, TBC, WOTLK, Cata, MOP, or Retail)
+2. **Set Addon Path**: Browse to your WoW addons folder 
+   - Example: `C:\Program Files (x86)\World of Warcraft\_classic_\Interface\AddOns`
+3. **Automatic Detection**: The application will automatically detect and add your existing addons.
+4. **Scan for Updates**: Click "Scan for Updates" to check for newer versions
 
 ## Usage
 
