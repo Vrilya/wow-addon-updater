@@ -44,7 +44,6 @@ A simple, lightweight tool for managing and updating addons from CurseForge for 
 - **Update All**: Click "Update All" to update all addons that have new versions available
 - **Individual Updates**: Click the "Update" button next to any addon that needs updating
 - **Remove Addons**: Click the trash icon to remove an addon you no longer want
-- **Note**: The application can only track and update addons that were installed through this tool
 
 ### Installing New Addons
 
