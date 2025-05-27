@@ -7,7 +7,7 @@ A simple, lightweight tool for managing and updating addons from CurseForge for 
 ## Features
 
 - 🔄 **No Login Required**: Works without any login credentials or API keys
-- 📋 **Addon Tracking**: Keeps track of addons installed through the application
+- 📋 **Addon Tracking**: Keeps track of installed addons
 - ⬆️ **One-Click Updates**: Update all your addons with a single click
 - 🔍 **Addon Search**: Search and install new addons directly from CurseForge
 - ⚙️ **ElvUI Support**: Install, update, and manage ElvUI alongside your CurseForge addons
