@@ -108,7 +108,6 @@ namespace WowAddonUpdater
             else
             {
                 CustomUserAgentTextBox.Background = System.Windows.Media.Brushes.White;
-                CustomUserAgentTextBox.Focus(); // Fokusera på textrutan när den aktiveras
             }
         }
 

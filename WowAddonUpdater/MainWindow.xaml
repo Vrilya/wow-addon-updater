@@ -28,7 +28,7 @@
 
             <!-- Titel och status -->
             <StackPanel>
-                <TextBlock Text="WoW Addon Updater 1.50" FontSize="20" FontWeight="Bold" 
+                <TextBlock Text="WoW Addon Updater 1.51" FontSize="20" FontWeight="Bold" 
                           Foreground="{StaticResource TextColor}"/>
                 <TextBlock x:Name="StatusTextBlock" Text="Last scanned: Never" 
                           Foreground="{StaticResource DarkGray}" Margin="0,5,0,0"/>
