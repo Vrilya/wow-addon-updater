@@ -1,0 +1,386 @@
+﻿<Window x:Class="WowAddonUpdater.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Settings" Height="750" Width="700" 
+        Background="{StaticResource LightGray}" MinHeight="750" MinWidth="700">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20">
+        <StackPanel>
+            <!-- Huvud -->
+            <Grid Margin="0,0,0,30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="⚙️" FontSize="32" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="Settings" FontSize="24" FontWeight="Bold" 
+                              Foreground="{StaticResource TextColor}"/>
+                    <TextBlock Text="Configure your WoW Addon Updater preferences" 
+                              FontSize="14" Foreground="{StaticResource DarkGray}" Margin="0,5,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- WoW Installations-kort -->
+            <Border Background="White" CornerRadius="12" Padding="25" Margin="0,0,0,20">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" Direction="270" Color="#22000000" BlurRadius="15" Opacity="0.15"/>
+                </Border.Effect>
+                <StackPanel>
+                    <!-- Kortets huvud -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Background="{StaticResource PrimaryColor}" CornerRadius="8" Padding="8" Margin="0,0,12,0">
+                            <TextBlock Text="🎮" FontSize="16" Foreground="White"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="WoW Installations" FontSize="16" FontWeight="SemiBold" 
+                                      Foreground="{StaticResource TextColor}"/>
+                            <TextBlock Text="Manage your World of Warcraft installations" 
+                                      FontSize="12" Foreground="{StaticResource DarkGray}"/>
+                        </StackPanel>
+                        <Button Grid.Column="2" x:Name="AddInstallationButton" Content="+ Add New" 
+                               Padding="12,6" Background="{StaticResource AccentColor}" Foreground="White"
+                               FontWeight="SemiBold" BorderThickness="0" Click="AddInstallationButton_Click"/>
+                    </Grid>
+
+                    <!-- Installations-lista -->
+                    <StackPanel x:Name="InstallationsPanel">
+                        <!-- Installationsobjekt kommer att läggas till här dynamiskt -->
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Användargränssnitts-card -->
+            <Border Background="White" CornerRadius="12" Padding="25" Margin="0,0,0,20">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" Direction="270" Color="#22000000" BlurRadius="15" Opacity="0.15"/>
+                </Border.Effect>
+                <StackPanel>
+                    <!-- Card-huvud -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Background="{StaticResource AccentColor}" CornerRadius="8" Padding="8" Margin="0,0,12,0">
+                            <TextBlock Text="🖥️" FontSize="16" Foreground="White"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="User Interface" FontSize="16" FontWeight="SemiBold" 
+                                      Foreground="{StaticResource TextColor}"/>
+                            <TextBlock Text="Control how the application appears and behaves" 
+                                      FontSize="12" Foreground="{StaticResource DarkGray}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Användargränssnitt inställningar -->
+                    <StackPanel>
+                        <!-- Minimera till tray -->
+                        <Border Background="{StaticResource LightGray}" CornerRadius="8" Padding="15" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="📌" FontSize="16" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Minimize to System Tray" FontWeight="SemiBold" 
+                                              Foreground="{StaticResource TextColor}"/>
+                                    <TextBlock Text="Hide in system tray when closing window" 
+                                              FontSize="12" Foreground="{StaticResource DarkGray}"/>
+                                </StackPanel>
+                                <CheckBox x:Name="MinimizeToTrayCheckBox" Grid.Column="2"
+                                         Checked="MinimizeToTrayCheckBox_CheckedChanged" 
+                                         Unchecked="MinimizeToTrayCheckBox_CheckedChanged"
+                                         VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Sortering av addon-lista -->
+                        <Border Background="{StaticResource LightGray}" CornerRadius="8" Padding="15">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="📋" FontSize="16" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="Addon List Sorting" FontWeight="SemiBold" 
+                                                  Foreground="{StaticResource TextColor}"/>
+                                        <TextBlock Text="Choose how addons are sorted in the main list" 
+                                                  FontSize="12" Foreground="{StaticResource DarkGray}"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <ComboBox x:Name="AddonSortComboBox" Grid.Row="1" 
+                                         Padding="12" FontSize="14" 
+                                         BorderBrush="{StaticResource MediumGray}" BorderThickness="1"
+                                         SelectionChanged="AddonSortComboBox_SelectionChanged"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Uppstartsinställningar (card) -->
+            <Border Background="White" CornerRadius="12" Padding="25" Margin="0,0,0,20">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" Direction="270" Color="#22000000" BlurRadius="15" Opacity="0.15"/>
+                </Border.Effect>
+                <StackPanel>
+                    <!-- Card-huvud -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Background="{StaticResource PrimaryColor}" CornerRadius="8" Padding="8" Margin="0,0,12,0">
+                            <TextBlock Text="🚀" FontSize="16" Foreground="White"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Startup Settings" FontSize="16" FontWeight="SemiBold" 
+                                      Foreground="{StaticResource TextColor}"/>
+                            <TextBlock Text="Configure how the application starts with Windows" 
+                                      FontSize="12" Foreground="{StaticResource DarkGray}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Uppstartsinställningar -->
+                    <StackPanel>
+                        <!-- Starta med Windows -->
+                        <Border Background="{StaticResource LightGray}" CornerRadius="8" Padding="15" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="💻" FontSize="16" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Start with Windows" FontWeight="SemiBold" 
+                                              Foreground="{StaticResource TextColor}"/>
+                                    <TextBlock Text="Launch automatically when Windows starts" 
+                                              FontSize="12" Foreground="{StaticResource DarkGray}"/>
+                                </StackPanel>
+                                <CheckBox x:Name="StartWithWindowsCheckBox" Grid.Column="2"
+                                         Checked="StartWithWindowsCheckBox_CheckedChanged" 
+                                         Unchecked="StartWithWindowsCheckBox_CheckedChanged"
+                                         VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Starta Minimerad -->
+                        <Border Background="{StaticResource LightGray}" CornerRadius="8" Padding="15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="➖" FontSize="16" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Start Minimized" FontWeight="SemiBold" 
+                                              Foreground="{StaticResource TextColor}"/>
+                                    <TextBlock Text="Start minimized to system tray" 
+                                              FontSize="12" Foreground="{StaticResource DarkGray}"/>
+                                </StackPanel>
+                                <CheckBox x:Name="StartMinimizedCheckBox" Grid.Column="2"
+                                         Checked="StartMinimizedCheckBox_CheckedChanged" 
+                                         Unchecked="StartMinimizedCheckBox_CheckedChanged"
+                                         VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Auto Scan-inställningar (card) -->
+            <Border Background="White" CornerRadius="12" Padding="25" Margin="0,0,0,20">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" Direction="270" Color="#22000000" BlurRadius="15" Opacity="0.15"/>
+                </Border.Effect>
+                <StackPanel>
+                    <!-- Card-huvud -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Background="{StaticResource SuccessColor}" CornerRadius="8" Padding="8" Margin="0,0,12,0">
+                            <TextBlock Text="⏰" FontSize="16" Foreground="White"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Auto Scan Settings" FontSize="16" FontWeight="SemiBold" 
+                                      Foreground="{StaticResource TextColor}"/>
+                            <TextBlock Text="Automatically check for addon updates across all installations" 
+                                      FontSize="12" Foreground="{StaticResource DarkGray}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Auto Scan-inställningar -->
+                    <StackPanel>
+                        <!-- Aktivera Auto Scan -->
+                        <Border Background="{StaticResource LightGray}" CornerRadius="8" Padding="15" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="🔍" FontSize="16" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Enable Auto Scan" FontWeight="SemiBold" 
+                                              Foreground="{StaticResource TextColor}"/>
+                                    <TextBlock Text="Automatically scan all installations for updates" 
+                                              FontSize="12" Foreground="{StaticResource DarkGray}"/>
+                                </StackPanel>
+                                <CheckBox x:Name="AutoScanCheckBox" Grid.Column="2"
+                                         Checked="AutoScanCheckBox_CheckedChanged" 
+                                         Unchecked="AutoScanCheckBox_CheckedChanged"
+                                         VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Scan-intervall -->
+                        <Border Background="{StaticResource LightGray}" CornerRadius="8" Padding="15" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="⏱️" FontSize="16" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock x:Name="AutoScanIntervalLabel" Text="Scan Interval" FontWeight="SemiBold" 
+                                                  Foreground="{StaticResource TextColor}" IsEnabled="False"/>
+                                        <TextBlock Text="How often to check for updates" 
+                                                  FontSize="12" Foreground="{StaticResource DarkGray}"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <ComboBox x:Name="AutoScanIntervalComboBox" Grid.Row="1" 
+                                         Padding="12" FontSize="14" IsEnabled="False"
+                                         BorderBrush="{StaticResource MediumGray}" BorderThickness="1"
+                                         SelectionChanged="AutoScanIntervalComboBox_SelectionChanged"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Auto Update efter scan -->
+                        <Border Background="{StaticResource LightGray}" CornerRadius="8" Padding="15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="🔃" FontSize="16" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Auto Update After Scan" FontWeight="SemiBold" 
+                                              Foreground="{StaticResource TextColor}"/>
+                                    <TextBlock Text="Automatically install updates when found" 
+                                              FontSize="12" Foreground="{StaticResource DarkGray}"/>
+                                </StackPanel>
+                                <CheckBox x:Name="AutoUpdateAfterScanCheckBox" Grid.Column="2"
+                                         Checked="AutoUpdateAfterScanCheckBox_CheckedChanged" 
+                                         Unchecked="AutoUpdateAfterScanCheckBox_CheckedChanged"
+                                         IsEnabled="False" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <!-- Network Settings (card) - LÄGG TILL DENNA -->
+            <Border Background="White" CornerRadius="12" Padding="25" Margin="0,0,0,20">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" Direction="270" Color="#22000000" BlurRadius="15" Opacity="0.15"/>
+                </Border.Effect>
+                <StackPanel>
+                    <!-- Card-huvud -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Background="{StaticResource AccentColor}" CornerRadius="8" Padding="8" Margin="0,0,12,0">
+                            <TextBlock Text="🌐" FontSize="16" Foreground="White"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Network Settings" FontSize="16" FontWeight="SemiBold" 
+                          Foreground="{StaticResource TextColor}"/>
+                            <TextBlock Text="Configure how the application identifies itself to servers" 
+                          FontSize="12" Foreground="{StaticResource DarkGray}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Custom User-Agent -->
+                    <Border Background="{StaticResource LightGray}" CornerRadius="8" Padding="15">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="🔧" FontSize="16" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Custom User-Agent" FontWeight="SemiBold" 
+                                  Foreground="{StaticResource TextColor}"/>
+                                    <TextBlock Text="Override browser identification (leave empty for default)" 
+                                  FontSize="12" Foreground="{StaticResource DarkGray}"/>
+                                </StackPanel>
+                                <CheckBox x:Name="UseCustomUserAgentCheckBox" Grid.Column="2"
+                             Checked="UseCustomUserAgentCheckBox_CheckedChanged" 
+                             Unchecked="UseCustomUserAgentCheckBox_CheckedChanged"
+                             VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <TextBox x:Name="CustomUserAgentTextBox" Grid.Row="1" 
+                         Padding="12" FontSize="12" IsEnabled="False"
+                         BorderBrush="{StaticResource MediumGray}" BorderThickness="1"
+                         TextChanged="CustomUserAgentTextBox_TextChanged"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- Nedre padding -->
+            <Border Height="20"/>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

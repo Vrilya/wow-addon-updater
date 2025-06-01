@@ -1,0 +1,208 @@
+﻿<Window x:Class="WowAddonUpdater.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:WowAddonUpdater"
+        xmlns:converters="clr-namespace:WowAddonUpdater.Converters"
+        Title="WoW Addon Updater - by Vrilya" Height="602" Width="1100" MinWidth="1100" MinHeight="602"
+        Background="{StaticResource LightGray}"
+        Icon="/Assets/app_icon.png">
+
+    <Window.Resources>
+        <converters:InstallationColorConverter x:Key="InstallationColorConverter"/>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Översta sektionen med rubrik och kontroller -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Titel och status -->
+            <StackPanel>
+                <TextBlock Text="WoW Addon Updater 1.50" FontSize="20" FontWeight="Bold" 
+                          Foreground="{StaticResource TextColor}"/>
+                <TextBlock x:Name="StatusTextBlock" Text="Last scanned: Never" 
+                          Foreground="{StaticResource DarkGray}" Margin="0,5,0,0"/>
+            </StackPanel>
+
+            <!-- Knappar -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button x:Name="ScanButton" Content="🔄 Scan All" Padding="10,5" 
+                       Background="{StaticResource PrimaryColor}" Foreground="White" Margin="0,0,10,0" 
+                       Click="ScanButton_Click"/>
+                <Button x:Name="UpdateAllButton" Content="⬆️ Update All" Padding="10,5" 
+                       Background="{StaticResource PrimaryColor}" Foreground="White" Margin="0,0,10,0" 
+                       Click="UpdateAllButton_Click"/>
+                <Button x:Name="SearchButton" Content="🔍 Search" Padding="10,5" 
+                       Background="White" Margin="0,0,10,0" Click="SearchButton_Click"/>
+                <Button x:Name="SettingsButton" Content="⚙️" Padding="5" Width="30" 
+                       Background="White" Click="SettingsButton_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Addon-lista -->
+        <Border Grid.Row="1" Background="White" CornerRadius="8">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" Direction="270" Color="#22000000" BlurRadius="10" Opacity="0.3"/>
+            </Border.Effect>
+            <Grid Margin="15">
+                <DataGrid x:Name="AddonDataGrid" AutoGenerateColumns="False" 
+                         SelectionMode="Single" IsReadOnly="True" BorderThickness="0" 
+                         Background="White" RowHeight="40" GridLinesVisibility="None">
+
+                    <!-- Radstil med installationsfärg -->
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Background" Value="{Binding InstallationId, Converter={StaticResource InstallationColorConverter}}"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource LightGray}"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource AccentColor}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="250">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Installations-kolumn -->
+                        <DataGridTextColumn Header="Installation" Binding="{Binding InstallationName}" Width="150">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="FontWeight" Value="Medium"/>
+                                    <Setter Property="Foreground" Value="{StaticResource SecondaryColor}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="310">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding NeedsUpdate}" Value="True">
+                                            <Setter Property="Foreground" Value="{StaticResource DangerColor}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding NeedsUpdate}" Value="False">
+                                            <Setter Property="Foreground" Value="{StaticResource UpdatedSuccessColor}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Last Updated" Binding="{Binding LastUpdated, StringFormat=\{0:yyyy-MM-dd HH:mm\}}" Width="150">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Uppdatera-knappkolumn -->
+                        <DataGridTemplateColumn Header="" Width="80">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Update" Padding="8,3" 
+                                           Background="{StaticResource PrimaryColor}" Foreground="White" 
+                                           Click="UpdateButton_Click">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding NeedsUpdate}" Value="False">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Radera-knappkolumn -->
+                        <DataGridTemplateColumn Header="" Width="50">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="🗑️" Width="32" Height="32" Padding="0" 
+                                           Background="{StaticResource DangerColor}" Foreground="White" 
+                                           Click="DeleteButton_Click">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Name}" Value="ElvUI">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <!-- Förloppssektion -->
+        <Border x:Name="ProgressSection" Grid.Row="2" Background="White" CornerRadius="8" 
+               Margin="0,15,0,0" Padding="20" Visibility="Collapsed">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" Direction="270" Color="#22000000" BlurRadius="10" Opacity="0.3"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Förloppstext -->
+                <Grid Grid.Row="0" Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="🔄" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock x:Name="ProgressTextBlock" Grid.Column="1" Text="Scanning addons..." 
+                              FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"
+                              Foreground="{StaticResource TextColor}"/>
+                    <TextBlock x:Name="ProgressCounterBlock" Grid.Column="2" Text="0 / 0" 
+                              FontSize="12" VerticalAlignment="Center"
+                              Foreground="{StaticResource DarkGray}"/>
+                </Grid>
+
+                <!-- Progress bar -->
+                <ProgressBar x:Name="ProgressBar" Grid.Row="1" Height="12" 
+                            Background="{StaticResource LightGray}" 
+                            Foreground="{StaticResource PrimaryColor}"
+                            BorderBrush="{StaticResource MediumGray}" BorderThickness="1"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

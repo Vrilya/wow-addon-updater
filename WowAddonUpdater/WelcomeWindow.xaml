@@ -1,0 +1,75 @@
+﻿<Window x:Class="WowAddonUpdater.WelcomeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Welcome to WoW Addon Updater" Height="640" Width="565" 
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Background="{StaticResource LightGray}">
+    <Grid Margin="25">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Huvud -->
+        <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,30">
+            <TextBlock Text="🎮" FontSize="48" HorizontalAlignment="Center"/>
+            <TextBlock Text="Welcome to WoW Addon Updater!" 
+                      FontSize="24" FontWeight="Bold" 
+                      Foreground="{StaticResource TextColor}" 
+                      HorizontalAlignment="Center" Margin="0,10,0,0"/>
+        </StackPanel>
+
+        <!-- Innehåll -->
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="20">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" Direction="270" Color="#22000000" BlurRadius="10" Opacity="0.3"/>
+            </Border.Effect>
+            <StackPanel>
+                <TextBlock Text="Here's how to get started:" 
+                          FontSize="16" Margin="0,0,0,20" 
+                          Foreground="{StaticResource TextColor}" TextWrapping="Wrap"
+                          HorizontalAlignment="Center"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                    <TextBlock Text="1️⃣" FontSize="20" Margin="0,0,15,0"/>
+                    <TextBlock Text="Create your WoW installation(s)" FontSize="14" FontWeight="SemiBold" 
+                              Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                </StackPanel>
+                <TextBlock Text="Add one or more installations for Classic, Retail, or any WoW version you play" 
+                          FontSize="12" Margin="35,0,0,20" 
+                          Foreground="{StaticResource DarkGray}" TextWrapping="Wrap"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                    <TextBlock Text="2️⃣" FontSize="20" Margin="0,0,15,0"/>
+                    <TextBlock Text="Configure each installation" FontSize="14" FontWeight="SemiBold" 
+                              Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                </StackPanel>
+                <TextBlock Text="For each installation: choose WoW version and point to its AddOns folder" 
+                          FontSize="12" Margin="35,0,0,20" 
+                          Foreground="{StaticResource DarkGray}" TextWrapping="Wrap"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                    <TextBlock Text="3️⃣" FontSize="20" Margin="0,0,15,0"/>
+                    <TextBlock Text="Find addons added outside the app" FontSize="14" FontWeight="SemiBold" 
+                              Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                </StackPanel>
+                <TextBlock Text="If you install addons manually, use the 🔍 button to find and sync them automatically" 
+                          FontSize="12" Margin="35,0,0,25" 
+                          Foreground="{StaticResource DarkGray}" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Settings will open next to help you set up your first installation." 
+                          FontSize="14" FontStyle="Italic" 
+                          Foreground="{StaticResource TextColor}" 
+                          HorizontalAlignment="Center" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Knapp -->
+        <Button Grid.Row="2" x:Name="OkButton" Content="Let's Get Started!" 
+               Padding="20,10" FontSize="16" FontWeight="SemiBold"
+               Background="{StaticResource PrimaryColor}" Foreground="White"
+               HorizontalAlignment="Center" Margin="0,20,0,0"
+               Click="OkButton_Click"/>
+    </Grid>
+</Window>
