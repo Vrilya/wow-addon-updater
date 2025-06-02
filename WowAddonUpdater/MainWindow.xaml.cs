@@ -504,7 +504,7 @@ namespace WowAddonUpdater
                 foreach (var addon in _addons.Where(a => a.NeedsUpdate))
                 {
                     currentAddon++;
-                    UpdateProgress(currentAddon, totalAddons, addon.Name);
+                    UpdateProgress(currentAddon, totalAddons, addon.Name, "Updating");
 
                     try
                     {
@@ -634,7 +634,7 @@ namespace WowAddonUpdater
                 UpdateButtonStates();
 
                 ShowProgress();
-                UpdateProgress(1, 1, addon.Name);
+                UpdateProgress(1, 1, addon.Name, "Updating");
                 Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
 
                 // Hämta ny FileId för individuella uppdateringar från cachelagrad data
@@ -683,7 +683,7 @@ namespace WowAddonUpdater
 
                     StatusTextBlock.Text = $"Last updated: {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
 
-                    MessageBox.Show($"{addon.Name} has been updated successfully in {addon.InstallationName}.", "Update Complete", MessageBoxButton.OK);
+                    // Ingen popup för lyckade uppdateringar... användaren ser ändå att det fungerade
                 }
                 else
                 {
@@ -811,21 +811,32 @@ namespace WowAddonUpdater
             ProgressSection.Visibility = Visibility.Collapsed;
         }
 
-        private void UpdateProgress(int current, int total, string currentAddon)
+        private void UpdateProgress(int current, int total, string currentAddon, string operation = "Scanning")
         {
             ProgressBar.Maximum = total;
             ProgressBar.Value = current;
 
             if (!string.IsNullOrEmpty(currentAddon))
             {
-                ProgressTextBlock.Text = $"Scanning {currentAddon}...";
+                ProgressTextBlock.Text = $"{operation} {currentAddon}...";
             }
             else
             {
-                ProgressTextBlock.Text = "Scanning addons...";
+                ProgressTextBlock.Text = $"{operation} addons...";
             }
 
             ProgressCounterBlock.Text = $"{current} / {total}";
+        }
+
+        // Bekvämlighetsmetoder för olika operationer
+        private void UpdateProgressForScanning(int current, int total, string currentAddon)
+        {
+            UpdateProgress(current, total, currentAddon, "Scanning");
+        }
+
+        private void UpdateProgressForUpdating(int current, int total, string currentAddon)
+        {
+            UpdateProgress(current, total, currentAddon, "Updating");
         }
 
         public void ShowSynchronizationProgress(int current, int total, string currentAddon)
