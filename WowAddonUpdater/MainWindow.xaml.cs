@@ -272,6 +272,18 @@ namespace WowAddonUpdater
 
         private void UpdateButtonStates()
         {
+            // Kontrollera om vi har giltiga installationer
+            bool hasValidInstallations = HasValidInstallations();
+            bool canPerformActions = hasValidInstallations && !_isScanning;
+
+            // Uppdatera knappars aktiverade tillstånd
+            ScanButton.IsEnabled = canPerformActions;
+            UpdateAllButton.IsEnabled = canPerformActions && (_addons?.Any(a => a.NeedsUpdate) ?? false);
+            SearchButton.IsEnabled = canPerformActions;
+
+            // Settings-knappen ska alltid vara aktiv
+            SettingsButton.IsEnabled = true;
+
             // Tvinga kommandohanteraren att utvärdera om alla kommandon
             CommandManager.InvalidateRequerySuggested();
         }
