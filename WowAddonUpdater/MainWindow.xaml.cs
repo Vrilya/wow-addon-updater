@@ -272,17 +272,29 @@ namespace WowAddonUpdater
 
         private void UpdateButtonStates()
         {
+            // Säkerställ att _addons är initialiserad
+            if (_addons == null)
+            {
+                _addons = new List<Addon>();
+            }
+
             // Kontrollera om vi har giltiga installationer
             bool hasValidInstallations = HasValidInstallations();
             bool canPerformActions = hasValidInstallations && !_isScanning;
 
             // Uppdatera knappars aktiverade tillstånd
             ScanButton.IsEnabled = canPerformActions;
-            UpdateAllButton.IsEnabled = canPerformActions && (_addons?.Any(a => a.NeedsUpdate) ?? false);
             SearchButton.IsEnabled = canPerformActions;
+
+            // Update All button - ska bara vara aktiv om det finns uppdateringar
+            bool hasUpdatesAvailable = _addons.Any(a => a.NeedsUpdate);
+            UpdateAllButton.IsEnabled = canPerformActions && hasUpdatesAvailable;
 
             // Settings-knappen ska alltid vara aktiv
             SettingsButton.IsEnabled = true;
+
+            // Debug-logging för att se vad som händer
+            System.Diagnostics.Debug.WriteLine($"UpdateButtonStates: hasValidInstallations={hasValidInstallations}, isScanning={_isScanning}, addonsCount={_addons.Count}, hasUpdatesAvailable={hasUpdatesAvailable}");
 
             // Tvinga kommandohanteraren att utvärdera om alla kommandon
             CommandManager.InvalidateRequerySuggested();
@@ -326,6 +338,7 @@ namespace WowAddonUpdater
                 }
 
                 LogMessage("Loaded addons from config on startup");
+                UpdateButtonStates();
             }
             catch (Exception ex)
             {
@@ -482,19 +495,88 @@ namespace WowAddonUpdater
                 ShowProgress();
                 Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
 
-                int updatedCount = 0;
+                int successfulUpdates = 0;
+                int failedUpdates = 0;
                 int totalAddons = _addons.Count(a => a.NeedsUpdate);
+                int currentAddon = 0;
+                List<string> failedAddonNames = new List<string>();
 
                 foreach (var addon in _addons.Where(a => a.NeedsUpdate))
                 {
-                    updatedCount++;
-                    UpdateProgress(updatedCount, totalAddons, addon.Name);
+                    currentAddon++;
+                    UpdateProgress(currentAddon, totalAddons, addon.Name);
 
-                    await _addonUpdater.UpdateAddon(addon);
+                    try
+                    {
+                        LogMessage($"Attempting to update: {addon.Name} in {addon.InstallationName}");
+
+                        // VIKTIGT: Hämta ny FileId för varje addon (samma logik som UpdateSingleAddonAsync)
+                        if (addon.Id.HasValue && addon.Name != "ElvUI")
+                        {
+                            var installation = _addonUpdater.GetInstallations().FirstOrDefault(i => i.Id == addon.InstallationId);
+                            if (installation != null)
+                            {
+                                var addonDetails = await _addonUpdater.GetCurseForgeService().GetAddonDetails(addon.Id.Value);
+                                var files = addonDetails["data"];
+
+                                JObject compatibleFile = null;
+                                foreach (var file in files)
+                                {
+                                    var gameVersionTypeIds = file["gameVersionTypeIds"];
+                                    if (gameVersionTypeIds != null)
+                                    {
+                                        foreach (var id in gameVersionTypeIds)
+                                        {
+                                            if (id.Value<int>() == installation.GameVersionId)
+                                            {
+                                                compatibleFile = (JObject)file;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (compatibleFile != null) break;
+                                }
+
+                                if (compatibleFile != null && compatibleFile["id"]?.Value<int?>() is int fileId)
+                                {
+                                    addon.FileId = fileId;
+                                    LogMessage($"Updated FileId for {addon.Name}: {fileId}");
+                                }
+                                else
+                                {
+                                    LogMessage($"No compatible file found for {addon.Name} in {installation.Name}");
+                                }
+                            }
+                        }
+
+                        bool updateSuccess = await _addonUpdater.UpdateAddon(addon);
+
+                        if (updateSuccess)
+                        {
+                            successfulUpdates++;
+                            LogMessage($"Successfully updated: {addon.Name} in {addon.InstallationName}");
+                        }
+                        else
+                        {
+                            failedUpdates++;
+                            failedAddonNames.Add($"{addon.Name} ({addon.InstallationName})");
+                            LogMessage($"Failed to update: {addon.Name} in {addon.InstallationName}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        failedUpdates++;
+                        failedAddonNames.Add($"{addon.Name} ({addon.InstallationName})");
+                        LogError($"Exception updating {addon.Name} in {addon.InstallationName}", ex);
+                    }
+
+                    // Kort paus mellan uppdateringar
+                    await Task.Delay(500);
                 }
 
+                // Ladda om data efter uppdateringar
                 _addonUpdater.LoadConfig();
-                _addons = _addonUpdater.LoadAddonsFromConfig(); // Detta inkluderar nu mer sortering
+                _addons = _addonUpdater.LoadAddonsFromConfig();
 
                 AddonDataGrid.ItemsSource = null;
                 AddonDataGrid.ItemsSource = _addons;
@@ -502,11 +584,22 @@ namespace WowAddonUpdater
                 StatusTextBlock.Text = $"Last updated: {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
                 HideProgress();
 
-                MessageBox.Show($"Updated {totalAddons} addons successfully across all installations.", "Update Complete", MessageBoxButton.OK);
+                // Visa endast meddelande om det finns fel
+                if (failedUpdates > 0)
+                {
+                    string resultMessage = $"Update completed with some issues:\n\n" +
+                                          $"✅ Successful: {successfulUpdates}\n" +
+                                          $"❌ Failed: {failedUpdates}\n\n" +
+                                          $"Failed addons:\n{string.Join("\n", failedAddonNames)}";
+
+                    MessageBox.Show(resultMessage, "Update Issues",
+                                  MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                // Om allt lyckades - ingen popup, användaren ser uppdateringen i listan ändå
             }
             catch (Exception ex)
             {
-                LogError("Error updating addons", ex);
+                LogError("Error during update all process", ex);
                 MessageBox.Show($"Error updating addons: {ex.Message}", "Error", MessageBoxButton.OK);
                 HideProgress();
             }
